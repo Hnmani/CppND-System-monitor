@@ -2,7 +2,6 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
-
 #include "linux_parser.h"
 
 using std::stof;
@@ -67,7 +66,23 @@ vector<int> LinuxParser::Pids() {
 }
 
 // TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+float LinuxParser::MemoryUtilization() { 
+  vector<int> cpus;
+  float total_memory,memory_free;
+  string line, garb;
+  std::ifstream stream(kProcDirectory + kMeminfoFilename);
+  if (stream.is_open()){
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    std::getline(stream, line);
+    std::istringstream linestream2(line);
+    linestream >> garb >> total_memory;
+    linestream2 >> garb >> memory_free;
+  }
+  float utilization = 1 - (memory_free / total_memory);
+  
+  return utilization;
+}
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() { return 0; }
@@ -86,7 +101,25 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+vector<string> LinuxParser::CpuUtilization() { 
+  // vector<int> cpus;
+  // int cps, total_time = 0 , idle;
+  // string line, garb;
+  // std::ifstream stream(kProcDirectory + kStatFilename);
+  // if (stream.is_open()){
+  //   std::getline(stream, line);
+  //   std::istringstream linestream(line);
+  //   linestream >> garb;
+  //   while(linestream >> cps){
+  //     cpus.push_back(cps);
+  //     total_time += cps;
+  //   }
+  // }
+  // idle = cpus[3];
+  // float utilization = 1.0 - (idle / total_time);
+
+  return {}; 
+}
 
 // TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { return 0; }
